@@ -25,6 +25,9 @@ class PostViewModel @Inject constructor(
     private val _posts = MutableStateFlow<List<Post>>(emptyList())
     val posts: StateFlow<List<Post>> = _posts.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
     private val _comments = MutableStateFlow<List<Comment>>(emptyList())
     val comments: StateFlow<List<Comment>> = _comments.asStateFlow()
 
@@ -34,7 +37,9 @@ class PostViewModel @Inject constructor(
 
     fun getPosts() {
         viewModelScope.launch {
+            _isLoading.value = true
             _posts.value = repository.getPosts()
+            _isLoading.value = false
         }
     }
 
